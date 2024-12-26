@@ -23,24 +23,30 @@ router.post('/upload', upload.single('image'), async (req, res) => {
             return res.status(400).json({ message: 'No file uploaded' });
         }
         const result = await cloudinary.uploader.upload(req.file.path);
-
-        // Create a new image entry with the secure_url and public_id from Cloudinary
         const newImage = new Image({
             secure_url: result.secure_url,
-            public_id: result.public_id,  // Add the public_id to the image data
+            public_id: result.public_id, 
         });
 
-        await newImage.save(); // Save image data to MongoDB
-
-        // Return the secure URL and the success message
+        await newImage.save(); 
         res.json({
             secure_url: result.secure_url,
-            public_id: result.public_id,  // Return the public_id as well
+            public_id: result.public_id, 
             message: 'Image uploaded and saved to MongoDB successfully!',
         });
     } catch (error) {
         console.error('Error uploading image:', error);
         res.status(500).json({ message: 'Error uploading image', error });
+    }
+});
+
+router.get('/images', async (req, res) => {
+    try {
+        const images = await Image.find();
+        res.json(images);
+    } catch (error) {
+        console.error('Error fetching images:', error);
+        res.status(500).json({ message: 'Error fetching images', error });
     }
 });
 

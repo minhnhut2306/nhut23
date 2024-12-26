@@ -6,14 +6,14 @@ const imageSchema = new mongoose.Schema({
       required: true,
       validate: {
         validator: function(v) {
-          return /^https?:\/\//.test(v);  // Basic validation for URLs
+          return /^https?:\/\//.test(v);  
         },
         message: props => `${props.value} is not a valid URL!`,
       },
     },
     public_id: {
       type: String,
-      required: true,  // public_id is required to delete or update the image on Cloudinary
+      required: true, 
     },
     uploaded_at: {
       type: Date,
